@@ -1,16 +1,42 @@
-# This is a sample Python script.
-
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+import cv2
+import numpy as np
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+sharp= np.array([[
+    0,-1,0,
+    -1,5,-1,
+    0,-1,0
+]])
+source = cv2.VideoCapture(0)
 
+win_name ='filter demo'
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+cv2.namedWindow(win_name,cv2.WINDOW_NORMAL)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+PREVIEW = 0
+
+CANNY= 1
+image_filter= PREVIEW
+
+result=None
+while True:
+    has_frame ,frame = source.read()
+    if not has_frame:
+        break
+    frame = cv2.flip(frame,1)
+    if image_filter == CANNY:
+        result =cv2.Canny(frame,50,150)
+    else:
+        # cv2.filter2D(frame, -1, sharp)
+        # cv2.GaussianBlur(frame, (25, 25), 0, 0)
+        result = frame
+    cv2.imshow(win_name,result)
+
+    key = cv2.waitKey(1)
+    if key== ord('Q') or key == ord('q') or key==27:
+        break
+    elif key== ord('C') or key == ord('c'):
+        image_filter=CANNY
+
+    elif key== ord('P') or key == ord('p'):
+        image_filter=PREVIEW
